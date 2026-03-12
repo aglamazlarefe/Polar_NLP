@@ -62,36 +62,38 @@ def main():
     # 4. Model Eğitimi (Training)
     # Önceden eğitilmiş (pre-trained) BERTurk modelini yükleyelim
     # Sınıf sayımız 3 (0: Objektif Rapor, 1: Bilişsel Yorgunluk, 2: Kış Sendromu)
+    # 4. Model Eğitimi (Training)
     model = AutoModelForSequenceClassification.from_pretrained(model_ismi, num_labels=3)
 
-    # Eğitim (Training) parametreleri ve hiperparametre ayarları
     training_args = TrainingArguments(
-        output_dir="./sonuclar",                   # Checkpoint'lerin ve modelin kaydedileceği dizin
-        eval_strategy="epoch",                     # Her epoch sonunda validation set üzerinde değerlendir
-        save_strategy="epoch",                     # Her epoch sonunda checkpoint kaydet
-        learning_rate=2e-5,                        # Transformer modelleri için makul fine-tuning öğrenme oranı
-        per_device_train_batch_size=16,            # RTX 3060 12GB VRAM için optimize edilmiş batch boyutu
-        per_device_eval_batch_size=32,             # Değerlendirme sırasında VRAM tüketimi düşük olduğundan daha yüksek olabilir
-        num_train_epochs=4,                        # Talimatlardaki epoch sayısı
-        weight_decay=0.01,                         # Aşırı öğrenmeyi (overfitting) engellemek için
-        fp16=True,                                 # Kesinlikle Aktif! RTX 3060 Tensor Core avantajı (Mixed Precision)
-        gradient_accumulation_steps=2,             # Her 2 adımda bir gradientleri birleştir (Cihaz belleğini yormamak için)
-        load_best_model_at_end=True,               # En iyi performans gösteren (validation set) modeli hafızaya al
-        metric_for_best_model="f1",                # En iyi modeli seçerken temel alınacak metrik
-        logging_dir="./loglar",
-        logging_steps=10
+        output_dir="./results",
+        eval_strategy="epoch",
+        save_strategy="epoch",
+        learning_rate=2e-5,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=32,
+        num_train_epochs=4,
+        weight_decay=0.01,
+        fp16=True, 
+        gradient_accumulation_steps=2,
+        load_best_model_at_end=True,
+        metric_for_best_model="f1",
+        report_to="tensorboard",
+        logging_steps=10, # Virgül hatası düzeltildi
+        # logging_dir artık burada gerekmiyor, report_to yeterli
     )
 
-    # Trainer sınıfını oluşturalım
+    # Trainer yapılandırmasını düzeltiyoruz
     trainer = Trainer(
         model=model,
         args=training_args,
-        train_dataset=tokenized_datasets["train"],
-        eval_dataset=tokenized_datasets["validation"],
-        tokenizer=tokenizer,
-        compute_metrics=compute_metrics
+        train_dataset=tokenized_datasets["train"],      # DÜZELTİLDİ: Tokenlanmış veri
+        eval_dataset=tokenized_datasets["validation"], # DÜZELTİLDİ: Tokenlanmış veri
+        processing_class=tokenizer,                    # transformers v4.47+ için processing_class
+        compute_metrics=compute_metrics                # EKLENDİ: Metrik fonksiyonu
     )
-
+    
+    
     # Eğitimi (Fine-tuning) başlat
     print("Model eğitimi (Fine-Tuning) başlatılıyor...")
     trainer.train()
