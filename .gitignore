@@ -22,6 +22,7 @@ var/
 wheels/
 share/python-wheels/results/
 egitilmis_berturk_modeli/
+egitilmis_hybrid_model/
 *.pt
 *.safetensors
 *.bin
