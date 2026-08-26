@@ -10,10 +10,14 @@ from io import BytesIO
 
 # train_hybrid.py'den analiz fonksiyonunu import et
 try:
-    from train_hybrid import polar_analiz_et
+    from polar_nlp.train_hybrid import polar_analiz_et
     MODEL_LOADED = True
 except ImportError:
-    MODEL_LOADED = False
+    try:
+        from train_hybrid import polar_analiz_et
+        MODEL_LOADED = True
+    except ImportError:
+        MODEL_LOADED = False
 
 # ==========================================================
 # 1. SAYFA YAPILANDIRMASI VE TASARIM
