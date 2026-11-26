@@ -1,0 +1,28 @@
+{
+  "uretilen": 300,
+  "denetci_1_uyusma_orani": 1.0,
+  "cohen_kappa": 1.0,
+  "uyusmazlik_sayisi": 0,
+  "ikinci_hakem_uretici_etiketini_onayladi": 0,
+  "etiket_uyusmazligindan_atilan": [],
+  "ikinci_hakem_kontrol_uyusma_orani": null,
+  "yalitilmis_orneklem_denetimi": {
+    "n": 90,
+    "uyusma_orani": 1.0,
+    "cohen_kappa": 1.0,
+    "zor_uyusma_orani": 1.0,
+    "uyusmayan_idler": []
+  },
+  "kalite_suzgecinden_atilan": {
+    "uzunluk": [],
+    "yakin_kopya": []
+  },
+  "v2_kalan": 300,
+  "v2_sinif_dagilimi": {
+    "0": 100,
+    "1": 100,
+    "2": 100
+  },
+  "v2_zor_sayisi": 60,
+  "toplam": 600
+}

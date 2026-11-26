@@ -1,0 +1,20 @@
+# Kurulum:
+#   python -m venv .venv
+#   .venv\Scripts\activate            (Linux/macOS: source .venv/bin/activate)
+#   pip install torch --index-url https://download.pytorch.org/whl/cpu     # yalnız CPU
+#   pip install -r requirements.txt
+# NVIDIA GPU için torch'u https://pytorch.org adresindeki CUDA komutuyla kurun.
+#
+# Alt sınırlar, sonuçların üretildiği sürümlerdir (Python 3.13, Kasım 2026).
+torch>=2.15
+transformers>=5.24
+safetensors>=0.8
+scikit-learn>=1.9
+scipy>=1.18
+pandas>=3.1
+numpy>=2.5
+matplotlib>=3.11
+seaborn>=0.13
+streamlit>=1.67
+python-docx>=1.2
+pytest>=9.2
