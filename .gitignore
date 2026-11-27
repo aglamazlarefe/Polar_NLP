@@ -21,7 +21,6 @@ sdist/
 var/
 wheels/
 share/python-wheels/
-results/
 egitilmis_berturk_modeli/
 egitilmis_hybrid_model/
 *.pt
@@ -185,3 +184,8 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Polar NLP
+outputs/
+runs/
+.claude/settings.local.json

@@ -1,16 +1,3 @@
-"""Polar NLP — Türkçe Doğal Dil İşleme ile Psikososyal Risk Taraması.
+"""Polar NLP — Antarktika üssü seyir defteri metinleri için hibrit (BERTurk + stilometri) sınıflandırıcı."""
 
-TR-KABÜ (Kalıcı Türk Bilim Üssü) personelinin seyir defteri kayıtlarını
-analiz ederek BERTurk + Stilometri hibrit mimarisi ile psikolojik durum
-sınıflandırması ve risk profili çıkarması yapar.
-"""
-
-from polar_nlp.train_hybrid import polar_analiz_et, stilometri_cikar, HybridPolarModel
-
-
-
-__all__ = [
-    "polar_analiz_et",
-    "stilometri_cikar",
-    "HybridPolarModel",
-]
+__version__ = "0.3.0"
