@@ -87,3 +87,7 @@ Sıradaki işler: [docs/YOL_HARITASI.md](docs/YOL_HARITASI.md) · Yapay zeka asi
 - Veri küçüktür (600 metin) ve tek tohumla değerlendirilmiştir.
 - Stilometrik göstergeler düzenli ifadelerle hesaplanır; biçimbilimsel çözümleme yapılmaz.
 - "Risk skoru" sınıf olasılıklarının ağırlıklı toplamıdır; herhangi bir klinik ölçekle doğrulanmamıştır.
+
+## Lisans
+
+MIT — bkz. [LICENSE](LICENSE).
