@@ -97,7 +97,8 @@ def model_karsilastirma(metrik):
         for xi, o in zip(x, ort):
             ax.text(xi, min(o + 0.04, 1.06), f"{o:.2f}", ha="center", va="bottom", color=YAZI, fontsize=8)
     ax.axhline(1 / 3, color=IZGARA, ls=":", lw=1.2)
-    ax.text(len(deneyler) - 0.52, 1 / 3 + 0.01, "şans düzeyi", color=IZGARA, fontsize=8, ha="right")
+    ax.text(1.005, 1 / 3, "şans\ndüzeyi", color=IZGARA, fontsize=8, ha="left", va="center",
+            transform=ax.get_yaxis_transform())
     ax.set_xticks(np.arange(len(deneyler)))
     ax.set_xticklabels([DENEY_ETIKETLERI[d] for d in deneyler], color=YAZI)
     ax.set_ylim(0, 1.15)
@@ -105,7 +106,7 @@ def model_karsilastirma(metrik):
     ax.grid(axis="y", color=IZGARA, alpha=0.15, ls="--")
     ax.set_title("Model karşılaştırması (hata çubukları: katlar arası standart sapma)",
                  fontsize=12, fontweight="bold", pad=10)
-    _lejant(ax, loc="lower right", ncol=4)
+    _lejant(ax, loc="upper center", bbox_to_anchor=(0.5, -0.09), ncol=4)
     return _kaydet(fig, "model_karsilastirma.png")
 
 
@@ -212,7 +213,7 @@ def demo_trend():
         ax.set_xticks(gun)
         ax.set_ylabel("Risk skoru")
         ax.grid(True, color=IZGARA, alpha=0.15, ls="--")
-        ax.set_title(p, fontsize=10.5, loc="left", fontweight="bold")
+        ax.set_title(p, fontsize=10.5, loc="left", fontweight="bold", color=YAZI)
     np.atleast_1d(eksenler)[-1].set_xlabel("Gün")
     tutamaclar = [plt.Line2D([], [], marker="o", ls="", color=r, label=a) for a, r in zip(SINIF_KISA, SINIF_RENKLERI)]
     np.atleast_1d(eksenler)[0].legend(handles=tutamaclar, facecolor=KUTU, edgecolor=IZGARA, labelcolor=YAZI,

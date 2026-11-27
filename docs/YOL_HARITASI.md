@@ -4,6 +4,18 @@ Sıradaki işler, öncelik sırasıyla. Her madde tek başına yapılabilir; ba�
 kurallarını okuyun. Bir işi bitirince bu dosyadan silin ve gerekiyorsa sonuçları yeniden üretin
 (`docs/DENEYLER.md` → "Çalıştırma sırası").
 
+## 0. İnce ayarlı çapraz doğrulamayı tamamlamak (önce bu)
+
+**Neden:** `results/metrics.json`'daki BERT sonuçları dondurulmuş gömmelerle alındı (zaman kısıtı). Hibritin ince
+ayarlı BERT'e karşı katkısı henüz ölçülmedi.
+
+1. Mümkünse NVIDIA GPU'lu makinede (ör. RTX 3060) çalıştırın; CPU'da 4–7 saat sürer ve makinede başka ağır iş
+   varsa çok daha uzun.
+2. `KOMIT=0 DENEY_ARG="--ince-ayar" bash scripts/tum_hat.sh` — deney, nihai model, grafikler, rapor ve testler
+   sırayla çalışır; durum `outputs/HAT_DURUM.txt` dosyasına yazılır. Yarıda kesilirse aynı komut kaldığı yerden sürer.
+3. CPU'da 4 saati aşacağı öngörülürse kat sayısı kendiliğinden 3'e iner (`meta.not`).
+4. `docs/SONUCLAR.md`'yi ve README'deki yorumları yeni sayılara göre gözden geçirin (sayıları elle yazmayın).
+
 ## 1. Gerçek veriyle doğrulama (en değerli adım)
 
 **Neden:** Bütün sonuçlar sentetik veriyle elde edildi. Gerçek seyir defteri dili farklı olabilir.

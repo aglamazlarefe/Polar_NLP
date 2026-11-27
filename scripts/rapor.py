@@ -37,6 +37,8 @@ def uret(metrik: dict) -> str:
          f"- Veri: {veri['n']} metin — " + ", ".join(f"{k}: {v}" for k, v in veri["sinif_dagilimi"].items())
          + " · kaynak " + ", ".join(f"{k}: {v}" for k, v in veri["kaynak_dagilimi"].items())
          + " · zorluk " + ", ".join(f"{k}: {v}" for k, v in veri["zorluk_dagilimi"].items())]
+    if meta.get("bert_yontemi_aciklama"):
+        s.append(f"- BERT modelleri: {meta['bert_yontemi_aciklama']}")
     if meta.get("not"):
         s.append(f"- Not: {meta['not']}")
 

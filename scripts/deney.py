@@ -26,9 +26,10 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import torch
 from scipy.stats import binomtest
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LogisticRegressionCV
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -44,6 +45,9 @@ from polar_nlp.veri import PolarDataset, dogrulama_ayir, katlar, veri_yukle  # n
 MODELLER = ["tfidf_lr", "stilometri_lr", "yalniz_bert", "hibrit"]
 BERT_MODELLERI = {"yalniz_bert": False, "hibrit": True}   # ad -> stilo_kullan
 MAKS_SAAT = 4.0
+DONDURULMUS_ACIKLAMA = ("BERTurk dondurulmuş: her metnin son katman ortalama havuzlamalı gömmesi bir kez çıkarılır; "
+                        "yalnız-BERT = gömme + lojistik regresyon, hibrit = gömme + stilometri + lojistik regresyon "
+                        "(C değeri eğitim katı içinde 3-kat CV ile seçilir).")
 
 
 def yaz(*a):
@@ -82,6 +86,34 @@ def bert_kosusu(stilo_kullan: bool, df, egitim_idx, test_idx, ayar: EgitimAyari,
     tahmin = tahmin_et(model, tokenizer, test).argmax(1)
     return {"tahmin": [int(t) for t in tahmin], "en_iyi_epoch": sonuc["en_iyi_epoch"],
             "epoch_sayisi": len(sonuc["gecmis"]), "sure_sn": round(sonuc["sure_sn"], 1), "n_egitim": len(e_idx)}
+
+
+@torch.no_grad()
+def gomme_hesapla(metinler: list[str], onbellek: Path) -> np.ndarray:
+    """Dondurulmuş BERTurk ile ortalama havuzlamalı gömme (n, 768). Diskte önbelleklenir."""
+    if onbellek.exists():
+        return np.load(onbellek)
+    from transformers import AutoModel, AutoTokenizer
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_ADI)
+    bert = AutoModel.from_pretrained(MODEL_ADI).eval()
+    parcalar = []
+    for i in range(0, len(metinler), 32):
+        kod = tokenizer(metinler[i:i + 32], padding=True, truncation=True, max_length=128, return_tensors="pt")
+        gizli = bert(**kod).last_hidden_state
+        maske = kod["attention_mask"].unsqueeze(-1).float()
+        parcalar.append(((gizli * maske).sum(1) / maske.sum(1)).numpy())
+        yaz(f"  gömme {min(i + 32, len(metinler))}/{len(metinler)}")
+    gomme = np.concatenate(parcalar).astype(np.float32)
+    onbellek.parent.mkdir(parents=True, exist_ok=True)
+    np.save(onbellek, gomme)
+    return gomme
+
+
+def dondurulmus_kosu(stilo_kullan: bool, gomme: np.ndarray, stilo: np.ndarray, y, egitim_idx, test_idx) -> dict:
+    x = np.hstack([gomme, stilo]) if stilo_kullan else gomme
+    boru = make_pipeline(StandardScaler(), LogisticRegressionCV(Cs=8, cv=3, max_iter=5000, random_state=SEED))
+    boru.fit(x[egitim_idx], y[egitim_idx])
+    return {"tahmin": [int(t) for t in boru.predict(x[test_idx])]}
 
 
 # ---------------------------------------------------------------- deney planı
@@ -180,11 +212,16 @@ def veri_ozeti(df) -> dict:
     return ozet
 
 
-def calistir(df, n_kat: int, ayar: EgitimAyari, onbellek: Path, sure_denetimi: bool) -> tuple[dict, dict] | None:
+def calistir(df, n_kat: int, ayar: EgitimAyari, onbellek: Path, sure_denetimi: bool,
+              ince_ayar: bool = False) -> tuple[dict, dict] | None:
     """Tüm koşuları yapar. Süre projeksiyonu sınırı aşarsa None döner (çağıran kat sayısını düşürür)."""
     from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(MODEL_ADI)
     plan = deney_plani(df, n_kat)
+    gomme = stilo = None
+    if not ince_ayar:
+        gomme = gomme_hesapla(df["Metin"].tolist(), onbellek.parent / f"gomme_{onbellek.name.split('_')[0]}.npy")
+        stilo = stilometri_matrisi(df["Metin"])
     onbellek.mkdir(parents=True, exist_ok=True)
     bert_isleri = [(len(e) * 0.85) for d in plan.values() for e, _ in d["bolmeler"]] * len(BERT_MODELLERI)
     toplam_is = sum(bert_isleri) * ayar.epoch          # örnek × epoch (üst sınır)
@@ -198,8 +235,10 @@ def calistir(df, n_kat: int, ayar: EgitimAyari, onbellek: Path, sure_denetimi: b
                 else:
                     yaz(f"[{datetime.now():%H:%M:%S}] {deney} | {model} | kat {kat + 1}/{len(d['bolmeler'])} "
                         f"(eğitim {len(e_idx)}, test {len(t_idx)})")
-                    if model in BERT_MODELLERI:
+                    if model in BERT_MODELLERI and ince_ayar:
                         kosu = bert_kosusu(BERT_MODELLERI[model], df, e_idx, t_idx, ayar, tokenizer)
+                    elif model in BERT_MODELLERI:
+                        kosu = dondurulmus_kosu(BERT_MODELLERI[model], gomme, stilo, df["Etiket"].to_numpy(), e_idx, t_idx)
                     else:
                         kosu = klasik_kosu(model, df, e_idx, t_idx)
                     dosya.write_text(json.dumps(kosu), encoding="utf-8")
@@ -237,6 +276,8 @@ def main():
     ap.add_argument("--epoch", type=int, default=EgitimAyari().epoch)
     ap.add_argument("--hizli", action="store_true", help="duman testi; results/metrics.json'a DOKUNMAZ")
     ap.add_argument("--cikti", default=None)
+    ap.add_argument("--ince-ayar", action="store_true",
+                    help="BERT'i her katta ince ayarla eğit (CPU'da saatler). Varsayılan: dondurulmuş gömme + LR")
     a = ap.parse_args()
 
     df = veri_yukle(a.veri)
@@ -247,13 +288,13 @@ def main():
         ayar, n_kat = EgitimAyari(epoch=1, sabir=None), 2
     cikti = Path(a.cikti) if a.cikti else (CIKTI_DIZINI / "metrics_hizli.json" if a.hizli else METRIK_YOLU)
     parmak_izi = hashlib.sha1(pd.util.hash_pandas_object(df[["Metin", "Etiket", "Konu", "Kaynak"]]).values.tobytes()
-                              + json.dumps(ayar.sozluk(), sort_keys=True).encode()).hexdigest()[:10]
+                              + json.dumps({**ayar.sozluk(), "ince_ayar": a.ince_ayar}, sort_keys=True).encode()).hexdigest()[:10]
 
     baslangic = time.time()
     not_ = None
     while True:
         onbellek = CIKTI_DIZINI / "deney_onbellek" / f"{parmak_izi}_{n_kat}kat"
-        cikan = calistir(df, n_kat, ayar, onbellek, sure_denetimi=not a.hizli)
+        cikan = calistir(df, n_kat, ayar, onbellek, sure_denetimi=not a.hizli and a.ince_ayar, ince_ayar=a.ince_ayar)
         if cikan is not None:
             break
         not_ = f"Süre projeksiyonu {MAKS_SAAT:.0f} saati aştığı için kat sayısı {n_kat}'ten 3'e düşürüldü."
@@ -277,6 +318,9 @@ def main():
             "surumler": {"torch": torch.__version__, "transformers": transformers.__version__,
                          "sklearn": sklearn.__version__},
             "hizli_mod": a.hizli,
+            "bert_yontemi": "ince_ayar" if a.ince_ayar else "dondurulmus_gomme_lr",
+            "bert_yontemi_aciklama": ("Her katta BERTurk ince ayarı (EgitimAyari)." if a.ince_ayar
+                                      else DONDURULMUS_ACIKLAMA),
             "not": not_,
         },
         "siniflar": SINIF_ADLARI,

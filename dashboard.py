@@ -351,6 +351,9 @@ if sayfa == SAYFALAR[2]:
         meta, veri = metrik["meta"], metrik["veri"]
         st.caption(f"Kaynak: results/metrics.json · {meta['tarih'][:10]} · commit {meta['commit']} · "
                    f"{veri['n']} metin · {meta['n_kat']}-kat konu-gruplu çapraz doğrulama · cihaz: {meta['cihaz']}")
+        if meta.get("bert_yontemi_aciklama"):
+            st.caption(f"Karşılaştırmadaki BERT modelleri: {meta['bert_yontemi_aciklama']} "
+                       "Paneldeki nihai model ise ince ayarla eğitilmiştir (bkz. eğitim eğrisi).")
         st.markdown("### Öne çıkan bulgular")
         for cumle in bulgular(metrik):
             st.markdown(f"- {cumle}")

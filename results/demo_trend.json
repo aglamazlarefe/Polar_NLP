@@ -1,0 +1,342 @@
+{
+  "aciklama": "Kurgusal 14 günlük günlükler; eğitimde kullanılmadı. Değerler nihai modelin gerçek çıktısıdır.",
+  "kayitlar": [
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-08",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.021,
+      "guven_skoru": 0.9706
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-09",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0248,
+      "guven_skoru": 0.9712
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-10",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0152,
+      "guven_skoru": 0.9816
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-11",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0183,
+      "guven_skoru": 0.9783
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-12",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0156,
+      "guven_skoru": 0.9799
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-13",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0195,
+      "guven_skoru": 0.9757
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-14",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0263,
+      "guven_skoru": 0.9652
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-15",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.028,
+      "guven_skoru": 0.9637
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-16",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0232,
+      "guven_skoru": 0.9718
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-17",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0306,
+      "guven_skoru": 0.9659
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-18",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0716,
+      "guven_skoru": 0.9172
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-19",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.015,
+      "guven_skoru": 0.9813
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-20",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0543,
+      "guven_skoru": 0.9313
+    },
+    {
+      "Personel": "P-01 Enerji Teknisyeni",
+      "Tarih": "2026-06-21",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0382,
+      "guven_skoru": 0.9552
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-08",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.018,
+      "guven_skoru": 0.9802
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-09",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0086,
+      "guven_skoru": 0.9895
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-10",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0187,
+      "guven_skoru": 0.9771
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-11",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0383,
+      "guven_skoru": 0.9554
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-12",
+      "Beklenen": 1,
+      "sinif": 0,
+      "risk_skoru": 0.3673,
+      "guven_skoru": 0.4247
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-13",
+      "Beklenen": 1,
+      "sinif": 1,
+      "risk_skoru": 0.6852,
+      "guven_skoru": 0.6124
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-14",
+      "Beklenen": 1,
+      "sinif": 1,
+      "risk_skoru": 0.6821,
+      "guven_skoru": 0.5673
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-15",
+      "Beklenen": 1,
+      "sinif": 1,
+      "risk_skoru": 0.6925,
+      "guven_skoru": 0.5074
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-16",
+      "Beklenen": 1,
+      "sinif": 2,
+      "risk_skoru": 0.7726,
+      "guven_skoru": 0.5521
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-17",
+      "Beklenen": 2,
+      "sinif": 2,
+      "risk_skoru": 0.9275,
+      "guven_skoru": 0.8649
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-18",
+      "Beklenen": 2,
+      "sinif": 2,
+      "risk_skoru": 0.7203,
+      "guven_skoru": 0.6709
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-19",
+      "Beklenen": 2,
+      "sinif": 2,
+      "risk_skoru": 0.857,
+      "guven_skoru": 0.7385
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-20",
+      "Beklenen": 2,
+      "sinif": 2,
+      "risk_skoru": 0.9227,
+      "guven_skoru": 0.8582
+    },
+    {
+      "Personel": "P-02 Meteoroloji Gözlemcisi",
+      "Tarih": "2026-06-21",
+      "Beklenen": 2,
+      "sinif": 2,
+      "risk_skoru": 0.8244,
+      "guven_skoru": 0.6559
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-08",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0253,
+      "guven_skoru": 0.9673
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-09",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0121,
+      "guven_skoru": 0.9852
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-10",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.028,
+      "guven_skoru": 0.9657
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-11",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.2622,
+      "guven_skoru": 0.7071
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-12",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0203,
+      "guven_skoru": 0.9768
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-13",
+      "Beklenen": 1,
+      "sinif": 1,
+      "risk_skoru": 0.6125,
+      "guven_skoru": 0.7548
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-14",
+      "Beklenen": 1,
+      "sinif": 2,
+      "risk_skoru": 0.7804,
+      "guven_skoru": 0.5817
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-15",
+      "Beklenen": 1,
+      "sinif": 1,
+      "risk_skoru": 0.6073,
+      "guven_skoru": 0.6288
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-16",
+      "Beklenen": 1,
+      "sinif": 1,
+      "risk_skoru": 0.5994,
+      "guven_skoru": 0.7835
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-17",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0178,
+      "guven_skoru": 0.9762
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-18",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0192,
+      "guven_skoru": 0.9773
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-19",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0324,
+      "guven_skoru": 0.9632
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-20",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.015,
+      "guven_skoru": 0.9827
+    },
+    {
+      "Personel": "P-03 Laboratuvar Sorumlusu",
+      "Tarih": "2026-06-21",
+      "Beklenen": 0,
+      "sinif": 0,
+      "risk_skoru": 0.0215,
+      "guven_skoru": 0.976
+    }
+  ],
+  "tasarimla_uyusma": 0.9285714285714286
+}

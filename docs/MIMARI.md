@@ -88,6 +88,8 @@ değiştir" kuralı kaldırıldı: ikisi de doğrulanmamış sezgisel eşlemeler
   kalıpları ezberleyerek puan alamaz.
 - **İç doğrulama:** her katta eğitim kısmının %15'i model seçimi için ayrılır; test katına yalnız bir kez bakılır.
 - **Dört model:** TF-IDF + lojistik regresyon (kelime ezberi taban çizgisi), yalnız stilometri, yalnız BERT, hibrit.
+  Varsayılan modda BERT modelleri dondurulmuş BERTurk gömmesi + lojistik regresyondur; `--ince-ayar` ile her katta
+  yukarıdaki hibrit mimari baştan eğitilir (bkz. `DENEYLER.md`).
 - **C ve D deneyleri** veri kaynakları arasında genellemeyi ölçer; v1'deki yüksek skorun veri setine özgü
   kalıplardan mı geldiği buradan anlaşılır.
 - **McNemar testi:** hibrit ile yalnız-BERT'in aynı örneklerdeki doğru/yanlışları karşılaştırılır.

@@ -24,6 +24,20 @@ yerden sürer. Önce hattın çalıştığını görmek için `scripts/deney.py 
 | C | v1 | v2 | v1'de öğrenilen şey, kalıp kelimeleri azaltılmış yeni veriye taşınıyor mu? |
 | D | v2 | v1 | Tersi: zor veride öğrenilen şey özgün veriye taşınıyor mu? |
 
+## BERT modelleri nasıl eğitiliyor?
+
+`scripts/deney.py` iki modda çalışır; hangisinin kullanıldığı `metrics.json → meta.bert_yontemi` alanında yazar.
+
+| Mod | Komut | Süre (CPU) | Ne yapar |
+|---|---|---|---|
+| Dondurulmuş (varsayılan) | `scripts/deney.py` | ~5 dk | BERTurk'ten her metin için bir kez ortalama havuzlamalı gömme çıkarılır; yalnız-BERT ve hibrit aynı lojistik regresyon başlığıyla karşılaştırılır. |
+| İnce ayar | `scripts/deney.py --ince-ayar` | 4–7 saat (GPU'da ~30 dk) | Her katta BERTurk baştan ince ayarlanır (`EgitimAyari`). |
+
+Şu anki sonuçlar **dondurulmuş** moddadır: tam ince ayar CPU'da saatler sürdüğü için çalıştırılamadı (bkz.
+`YOL_HARITASI.md`, madde 0). Dondurulmuş mod stilometrinin katkısını temiz ölçer (iki model arasındaki tek fark
+10 stilometri sütunudur) ama ince ayarlı BERT'in ulaşabileceği skoru olduğundan düşük gösterebilir. Paneldeki
+nihai model (`scripts/egit_final.py`) ise ince ayarla eğitilir; onun skoru yalnız doğrulama parçasındandır.
+
 ## Modeller
 
 | Ad | Ne ölçer |

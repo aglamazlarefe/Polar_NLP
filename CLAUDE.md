@@ -9,7 +9,9 @@ Veri **sentetiktir**. Kod, yorumlar ve belgeler Türkçedir; kullanıcıyla Tür
 ```bash
 .venv\Scripts\python -m pytest                 # tüm testler, ~15 sn, internet/GPU gerekmez
 .venv\Scripts\python scripts/deney.py --hizli  # deney hattı duman testi (~2 dk), results/'a dokunmaz
-.venv\Scripts\python scripts/deney.py          # TAM deneyler -> results/metrics.json (CPU'da saatler sürer)
+.venv\Scripts\python scripts/deney.py          # deneyler -> results/metrics.json (dondurulmuş BERT, ~5 dk)
+.venv\Scripts\python scripts/deney.py --ince-ayar   # her katta BERT ince ayarı (CPU'da saatler; GPU önerilir)
+bash scripts/tum_hat.sh                        # deney -> egit_final -> gorseller -> rapor -> pytest, sırayla
 .venv\Scripts\python scripts/egit_final.py     # panelin modeli -> egitilmis_hybrid_model/ + results/demo_trend.json
 .venv\Scripts\python scripts/gorseller.py      # results/*.png (yalnız JSON'dan)
 .venv\Scripts\python scripts/rapor.py          # docs/SONUCLAR.md (yalnız JSON'dan)
@@ -70,8 +72,10 @@ anahtarlanır, eski sonuç karışmaz).
 
 ## Bilinen tuzaklar
 
-- Tam deney CPU'da uzun sürer; arka planda çalıştırın. Yarıda kesilirse aynı komut kaldığı yerden devam eder
-  (`outputs/deney_onbellek/`).
+- `--ince-ayar` deneyi CPU'da uzun sürer; arka planda çalıştırın. Yarıda kesilirse aynı komut kaldığı yerden devam
+  eder (`outputs/deney_onbellek/`).
+- Makinede başka ağır CPU işleri varsa PyTorch iş parçacıkları birbirini bekleyip neredeyse durur. Çözüm:
+  `OMP_NUM_THREADS=4 OMP_WAIT_POLICY=PASSIVE KMP_BLOCKTIME=0` (`scripts/tum_hat.sh` bunları ayarlar).
 - `AutoModel.from_pretrained` çıktısındaki "UNEXPECTED / MISSING" tablosu beklenen bir uyarıdır (dil modeli başlığı
   atılıyor, sınıflandırıcı sıfırdan başlıyor).
 - Streamlit'te `use_container_width` kullanmayın; `width="stretch"` kullanın.
