@@ -37,4 +37,13 @@ Gerçek eğitim sonuçlarını, nihai modeli ve grafikleri üret
 Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>
 EOF
 fi
+if [ "${YAYINLA:-0}" = "1" ]; then
+  if [ "$TEST" != "testler geçti" ]; then adim "YAYIN ATLANDI: testler geçmedi"; adim "BİTTİ"; exit 1; fi
+  DAL=$(git rev-parse --abbrev-ref HEAD)
+  git push -u origin "$DAL" >> outputs/yayin_log.txt 2>&1 && adim "push: $DAL" || { adim "HATA: push"; exit 1; }
+  if ! gh pr view "$DAL" --json number >/dev/null 2>&1; then
+    gh pr create --base main --head "$DAL" --title "${PR_BASLIK:-Polar NLP v0.3: yeniden yapılandırma, dürüst değerlendirme, genişletilmiş veri}"       --body-file "${PR_GOVDE:-docs/SONUCLAR.md}" >> outputs/yayin_log.txt 2>&1 && adim "PR açıldı: $(gh pr view "$DAL" --json url -q .url)" || { adim "HATA: PR açılamadı"; exit 1; }
+  fi
+  gh pr merge "$DAL" --merge >> outputs/yayin_log.txt 2>&1 && adim "PR birleştirildi" || { adim "HATA: PR birleştirilemedi (outputs/yayin_log.txt)"; exit 1; }
+fi
 adim "BİTTİ"
