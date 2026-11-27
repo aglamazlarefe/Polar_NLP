@@ -6,7 +6,8 @@ Deneyler : A  v1 üzerinde çapraz doğrulama (konu bazlı gruplarla)
            C  v1'de eğit → v2'de test   (dağılım dışı genelleme)
            D  v2'de eğit → v1'de test
 
-    python scripts/deney.py              # tam çalıştırma (CPU'da ~2 saat)
+    python scripts/deney.py              # dondurulmuş BERTurk gömmesi + LR (CPU'da ~5 dk)
+    python scripts/deney.py --ince-ayar  # her katta BERT ince ayarı (CPU'da 4-7 saat, GPU önerilir)
     python scripts/deney.py --hizli      # duman testi: küçük alt küme, 1 epoch, sonuç outputs/ altına
 
 Her (deney, model, kat) sonucu outputs/deney_onbellek/ altında saklanır; yarıda kesilen
@@ -35,7 +36,8 @@ from sklearn.preprocessing import StandardScaler
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from polar_nlp.config import (CIKTI_DIZINI, KOK, METRIK_YOLU, MODEL_ADI, SEED, SINIF_ADLARI,  # noqa: E402
+from polar_nlp.config import (CIKTI_DIZINI, KOK, MAKS_UZUNLUK, METRIK_YOLU, MODEL_ADI, SEED,  # noqa: E402
+                              SINIF_ADLARI,
                               VERI_DIZINI, VERI_YOLU, EgitimAyari)
 from polar_nlp.egitim import egit, metrikler, tahmin_et  # noqa: E402
 from polar_nlp.model import HybridPolarModel  # noqa: E402
@@ -288,7 +290,11 @@ def main():
         ayar, n_kat = EgitimAyari(epoch=1, sabir=None), 2
     cikti = Path(a.cikti) if a.cikti else (CIKTI_DIZINI / "metrics_hizli.json" if a.hizli else METRIK_YOLU)
     parmak_izi = hashlib.sha1(pd.util.hash_pandas_object(df[["Metin", "Etiket", "Konu", "Kaynak"]]).values.tobytes()
-                              + json.dumps({**ayar.sozluk(), "ince_ayar": a.ince_ayar}, sort_keys=True).encode()).hexdigest()[:10]
+                              + json.dumps({**ayar.sozluk(), "ince_ayar": a.ince_ayar, "model": MODEL_ADI, "maks_uzunluk": MAKS_UZUNLUK},
+                             sort_keys=True).encode()
+                  # kod değişince eski önbellek kullanılmasın: özellik ve deney kodu da parmak izine girer
+                  + (KOK / "polar_nlp" / "stilometri.py").read_bytes() + Path(__file__).read_bytes()
+                  ).hexdigest()[:10]
 
     baslangic = time.time()
     not_ = None
@@ -312,7 +318,8 @@ def main():
             "commit": git_commit(),
             "taban_model": MODEL_ADI,
             "n_kat": n_kat,
-            "ayar": ayar.sozluk(),
+            "ayar": ayar.sozluk() if a.ince_ayar else {"seed": SEED, "bas": "LogisticRegressionCV(Cs=8, cv=3)",
+                                                        "havuzlama": "ortalama", "maks_uzunluk": MAKS_UZUNLUK},
             "cihaz": "cuda" if torch.cuda.is_available() else "cpu",
             "sure_dk": round((time.time() - baslangic) / 60, 1),
             "surumler": {"torch": torch.__version__, "transformers": transformers.__version__,

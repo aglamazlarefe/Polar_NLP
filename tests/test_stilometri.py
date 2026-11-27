@@ -54,6 +54,23 @@ def test_resmi_bildirme_ve_edilgen():
         assert ozellik(metin, "edilgen") == 0, metin
 
 
+@pytest.mark.parametrize("metin, ad, beklenen", [
+    # İnceleme bulgularının regresyon testleri
+    ("Bunu değiştir ve geliştir.", "resmi_bildirme", 0),          # emir/ettirgen gövde, bildirme değil
+    ("Raporu güçlendir, sonra değerlendir.", "resmi_bildirme", 0),
+    ("Sistem değiştirilmiştir.", "resmi_bildirme", 1),            # -mIştIr hâlâ bildirme
+    ("Komedi filmi izledik, pekmez aldık.", "olumsuzluk", 0),
+    ("Mutlu değilim.", "olumsuzluk", 1),
+    ("Mutlu değilim.", "birinci_tekil", 1),
+    ("Kullanılan yöntem uygulandı.", "edilgen", 1),               # kullan- + -Il- edilgendir
+    ("Cihazı kullandık.", "edilgen", 0),
+    ("Geçen yıl evlendi.", "edilgen", 0),                          # oluş fiili
+    ("Her şeyden sıkıldım.", "mutlakci", 1),
+])
+def test_inceleme_bulgulari(metin, ad, beklenen):
+    assert (ozellik(metin, ad) > 0) == bool(beklenen), (metin, ad)
+
+
 def test_mutlakci_ve_nedensellik():
     assert ozellik("Her zaman aynı sorun, asla çözülmüyor.", "mutlakci") == pytest.approx(2 / 6)
     assert ozellik("Fırtına yüzünden çıkamadık.", "nedensellik") > 0

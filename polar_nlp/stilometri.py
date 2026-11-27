@@ -52,6 +52,7 @@ _BIRINCI_TEKIL_SOZCUK = {
     "ben", "beni", "bana", "benim", "bende", "benden", "bence", "benimle",
     "kendim", "kendimi", "kendime", "kendimde", "kendimden",
     "tarafımca", "tarafımdan",
+    "değilim", "değildim", "yokum", "yoktum",
 }
 # -DIm ile biten ama fiil olmayan yaygın adlar (yanlış pozitifleri azaltır).
 _BIRINCI_TEKIL_HARIC = {
@@ -72,9 +73,10 @@ _BIRINCI_TEKIL_EK = re.compile(
     r")$"
 )
 
-_OLUMSUZ_SOZCUK = {"değil", "değildir", "değildi", "yok", "yoktur", "yoktu", "hayır"}
+_OLUMSUZ_SOZCUK = {"değil", "değildir", "değildi", "yok", "yoktur", "yoktu", "hayır",
+                   "değilim", "değiliz", "değilsin", "değildim", "yokum", "yoktum"}
 # Olumsuzluk eki gibi görünen ama öyle olmayan sözcük kökleri ("telsiz" = radyo).
-_OLUMSUZ_HARIC_KOK = ("telsiz", "mütemadiyen", "hırsız")
+_OLUMSUZ_HARIC_KOK = ("telsiz", "mütemadiyen", "hırsız", "komedi", "pekmez", "yılmaz", "kurmay")
 _OLUMSUZ_EK = re.compile(
     r"\w{2,}(?:"
     r"m[ıiuü]yor"                 # gelmiyor
@@ -89,7 +91,10 @@ _OLUMSUZ_EK = re.compile(
     r")"
 )
 
-_RESMI_HARIC = {"bildir", "kaldır", "saldır", "doldur", "durdur", "yıldır", "aldır", "prosedür", "kültür"}
+_RESMI_HARIC = {"bildir", "kaldır", "saldır", "doldur", "durdur", "yıldır", "aldır", "prosedür", "kültür",
+                "takdir", "kadir"}
+# Ettirgen/emir gövdeleri: değiştir, geliştir, dönüştür (ama "-mIştIr" bildirmedir), güçlendir, değerlendir.
+_RESMI_ETTIRGEN = re.compile(r"(?:(?<!m[ıiuü])ş[dt][ıiuü]r|l[ae]nd[ıi]r)$")
 _RESMI_EK = re.compile(r"\w{3,}[dt][ıiuü]r$")   # tamamlanmıştır, yapılmaktadır, anlamsızdır
 
 _EDILGEN_SONRASI = (
@@ -101,15 +106,18 @@ _EDILGEN_EK = re.compile(
     r"|(?:\w{2,}l[ae]n" + _EDILGEN_SONRASI + r")"               # tamamlandı, temizlendi
     r"|(?:\w+l(?:ın|in|un|ün)" + _EDILGEN_SONRASI + r")"        # alındı, bilinen
 )
-# Edilgen olmayan -lAn-/-Un- kökleri: etken "kullandı", dönüşlü "odaklandı", "bulunuyor" = mevcut.
-_EDILGEN_HARIC_KOK = ("kullan", "bulun", "dalgalan", "odaklan", "havalan", "yararlan", "faydalan")
+# Edilgen olmayan -lAn-/-Un- kökleri: etken "kullandı", dönüşlü "odaklandı", "bulunuyor" = mevcut,
+# oluş fiilleri "evlendi", "yaşlandı". Bu köklerden sonra -Il- gelirse ("kullanıldı") yine edilgendir.
+_EDILGEN_HARIC_KOK = ("kullan", "bulun", "dalgalan", "odaklan", "havalan", "yararlan", "faydalan",
+                      "evlen", "yaşlan", "hastalan", "sevin", "sinirlen", "heyecanlan", "endişelen")
+_EDILGEN_IL = re.compile(r"[ıiuü]l")
 
 _MUTLAKCI_SOZCUK = {
     "asla", "hiç", "hiçbir", "hiçbiri", "kesinlikle", "daima", "hep", "tamamen",
     "tümüyle", "bütünüyle", "tamamıyla", "mutlaka", "tüm", "bütün", "herkes",
     "kimse", "sürekli", "katiyen", "kesin", "tam",
 }
-_MUTLAKCI_OBEK = re.compile(r"\bher (?:zaman|şey|gün|defasında|seferinde)\b")
+_MUTLAKCI_OBEK = re.compile(r"\bher (?:zaman|şey|gün|defasında|seferinde)\w*")
 
 _NEDENSEL_SOZCUK = {
     "çünkü", "yüzünden", "yüzden", "nedeniyle", "nedenle", "sebebiyle", "sebeple",
@@ -153,11 +161,14 @@ def _olumsuz(k: str) -> bool:
 
 
 def _resmi(k: str) -> bool:
-    return k not in _RESMI_HARIC and bool(_RESMI_EK.match(k))
+    return k not in _RESMI_HARIC and bool(_RESMI_EK.match(k)) and not _RESMI_ETTIRGEN.search(k)
 
 
 def _edilgen(k: str) -> bool:
-    return not k.startswith(_EDILGEN_HARIC_KOK) and bool(_EDILGEN_EK.match(k))
+    for kok in _EDILGEN_HARIC_KOK:
+        if k.startswith(kok):
+            return bool(_EDILGEN_IL.match(k[len(kok):]))
+    return bool(_EDILGEN_EK.match(k))
 
 
 def _nedensel(k: str) -> bool:

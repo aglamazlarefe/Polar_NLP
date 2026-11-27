@@ -8,6 +8,7 @@ results/metrics.json'dan, model bilgisi egitilmis_hybrid_model/model_info.json'd
 
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import os
@@ -189,11 +190,13 @@ if sayfa == SAYFALAR[0]:
                 analizci = analizci_al(str(MODEL_YOLU))
                 with st.spinner("Metin inceleniyor…"):
                     st.session_state["tekil_sonuc"] = {
+                        "metin": metin,
                         "sonuc": analizci.analiz_et([metin])[0],
                         "katkilar": analizci.kelime_katkilari(metin),
                     }
-        if "tekil_sonuc" in st.session_state:
-            tekil_sonuc_goster(st.session_state["tekil_sonuc"])
+        kayit = st.session_state.get("tekil_sonuc")
+        if kayit and kayit.get("metin") == metin:      # metin değiştiyse eski sonucu gösterme
+            tekil_sonuc_goster(kayit)
 
 
 # ---------------------------------------------------------------- sayfa 2: toplu analiz
@@ -256,6 +259,7 @@ def demo_yukle() -> None:
     st.session_state["toplu_girdi"] = pd.read_csv(DEMO_YOLU).drop(columns=["Beklenen"], errors="ignore")
     st.session_state["toplu_kaynak"] = "Kurgusal demo günlükleri (3 personel × 14 gün)"
     st.session_state.pop("toplu_sonuc", None)
+    st.session_state.pop("toplu_imza", None)      # aynı dosya yeniden seçilirse tekrar okunsun
 
 
 if sayfa == SAYFALAR[1]:
@@ -272,7 +276,7 @@ if sayfa == SAYFALAR[1]:
             sag.button("Demo verisini kullan", on_click=demo_yukle, width="stretch",
                        help="Kurgusal 14 günlük günlükler. Model eğitiminde kullanılmadı.")
         if dosya is not None:
-            imza = (dosya.name, dosya.size)
+            imza = (dosya.name, hashlib.md5(dosya.getvalue()).hexdigest())
             if st.session_state.get("toplu_imza") != imza:
                 try:
                     st.session_state["toplu_girdi"] = csv_oku(dosya)
